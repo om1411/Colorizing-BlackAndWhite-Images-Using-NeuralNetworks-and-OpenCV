@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Colorizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Image Colorization</h1>
+    <form action="/colorize" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="Colorize">
+    </form>
+    <br>
+    <div id="result">
+        <img id="colorizedImage" src="" alt="Colorized Image">
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/colorize', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Image colorization failed');
+                }
+
+                const responseData = await response.blob();
+                const reader = new FileReader();
+
+                reader.onload = function () {
+                    const imgElement = document.getElementById('colorizedImage');
+                    imgElement.src = URL.createObjectURL(responseData);
+                };
+
+                reader.readAsDataURL(responseData);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
