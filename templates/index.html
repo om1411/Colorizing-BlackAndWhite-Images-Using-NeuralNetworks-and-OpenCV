@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 <head>
     <title>Image Colorizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -11,8 +10,15 @@
         <input type="submit" value="Colorize">
     </form>
     <br>
-    <div id="result">
-        <img id="colorizedImage" src="" alt="Colorized Image">
+    <div id="result" class="image-container">
+        <div>
+            <h2>Black and White Image</h2>
+            <img src="" alt="Black and White Image" id="bwImage">
+        </div>
+        <div>
+            <h2>Colorized Image</h2>
+            <img src="" alt="Colorized Image" id="colorizedImage">
+        </div>
     </div>
     <script>
         const form = document.querySelector('form');
@@ -31,14 +37,14 @@
                 }
 
                 const responseData = await response.blob();
-                const reader = new FileReader();
 
-                reader.onload = function () {
-                    const imgElement = document.getElementById('colorizedImage');
-                    imgElement.src = URL.createObjectURL(responseData);
-                };
+                // Set the source of the black and white image
+                const imgElement = document.getElementById('bwImage');
+                imgElement.src = URL.createObjectURL(formData.get('image'));
 
-                reader.readAsDataURL(responseData);
+                // Set the source of the colorized image
+                const imgElement2 = document.getElementById('colorizedImage');
+                imgElement2.src = URL.createObjectURL(responseData);
             } catch (error) {
                 console.error('Error:', error);
             }
